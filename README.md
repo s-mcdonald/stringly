@@ -82,7 +82,7 @@ You can output the string easily in your code like so...
         //
         // toString()
         //
-        $stringly->toString();
+        echo $stringly->toString();
 
         //
         // or

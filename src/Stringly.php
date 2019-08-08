@@ -476,16 +476,9 @@ final class Stringly
      */
     public function debug() 
     {
-        /*
-        ob_start();
-        var_dump($this->__debugInfo());
-        $result = ob_get_clean();
-        */
-
         $debug = var_export($this->__debugInfo(), true);
         
-        return Stringly::Create("<pre>".$debug."</pre>");
-        
+        return Stringly::Create("<pre>".$debug."</pre>"); 
     }
 
 
@@ -577,17 +570,6 @@ final class Stringly
     {
         return $this->indexOf ($needle, 0, $case_sensitive);
     }
-
-
-    /*
-    public function format(...$values)
-    {
-        return vprintf($this->value, $values);
-    }
-    */
-
-
-
 
 
 
@@ -721,7 +703,7 @@ final class Stringly
 
 
 
-        /**
+    /**
      * Is this string a multibyte styring
      * By comparing the lengths of mb_stringlen with length
      * 
@@ -844,14 +826,6 @@ final class Stringly
 
 
 
-
-
-    //http://php.net/manual/en/function.mb-strwidth.php
-    //http://php.net/manual/en/function.mb-substr-count.php
-
-
-    
-
     /**
      * Pads a given string with zeroes on the left.
      *
@@ -888,9 +862,6 @@ final class Stringly
     {
         return static::FromArray([$string, $this->value]);
     }
-
-
-
 
 
 
@@ -934,13 +905,6 @@ final class Stringly
 	}
 
 
-
-    /*
-    public function replace($clean, $cleanWith = '', $times = null)
-    {
-        return $this->rinse($clean, $cleanWith, $times);
-    }
-*/
 
     /**
      * Reverse order of characters
@@ -1017,34 +981,12 @@ final class Stringly
 
         return static::Create(str_replace($dirty, '', $this->value), $this->encoding);
     }
-    /*
-    public function rinse($dirty)
-    {
-        if(is_array($dirty))
-        {
-            foreach($dirty as $dirt)
-            {
-                // if this is a string, lets clean it
-                return $this->rinse($dirt);
-            }
-        }
-
-        if($this->has_mbstring)
-        {
-            return static::Create(mb_str_replace($dirty, '', $this->value), $this->encoding);
-        }
-
-        return static::Create(str_replace($dirty, '', $this->value), $this->encoding);
-    }
-    */
-
-
-    //---------------------------------------------
-
 
 
  
-
+    /** 
+     * 
+     */
     public function selectMBSupprt($enabled = true)
     {
         $this->_enableMBSupport = $enabled;
@@ -1112,7 +1054,9 @@ final class Stringly
     }   
 
 
-
+    /**
+     * 
+     */
     public function startsWith(string $string, bool $case_sensitive = true) : bool
     {
         $queryString = static::Create($string);
@@ -1162,9 +1106,9 @@ final class Stringly
     }
     
     
-    
-        
-    
+    /** 
+     * 
+     */
     public function toCrypt($salt = "") 
     {
         return static::Create(crypt ( $this->value, $salt ),$this->encoding);
@@ -1367,22 +1311,6 @@ final class Stringly
 
 
     /**
-     * hasMB Support sdhould be changed to static only, the variable 
-     * does not need to have a checker but can still contain a 
-     * variable to hold in mewmory
-     * 
-     * @return boolean [description]
-     */
-    /*
-    public function HasMultiByteSupport() : bool
-    {
-        return extension_loaded('mbstring');
-    }
-    */
-
-
-
-    /**
      * Decode html entities
      * 
      * http://php.net/manual/en/function.html-entity-decode.php
@@ -1444,39 +1372,11 @@ final class Stringly
         if (function_exists('mb_internal_encoding')) {
             return $encoding ? mb_internal_encoding($encoding) : mb_internal_encoding();
         }
-        // @codeCoverageIgnoreStart
+
         return 'UTF-8';
-        // @codeCoverageIgnoreEnd
+
     }
 
-
-
-
-    /**
-     * Numberly
-     * 
-     * Returns the ordinal version of a number (appends th, st, nd, rd).
-     *
-     * @param  string $number The number to append an ordinal suffix to
-     * @return string
-     */
-    /*
-    public static function ordinal($number)
-    {
-        $test_c = abs($number) % 10;
-        $ext = ((abs($number) % 100 < 21 && abs($number) % 100 > 4) ? 'th' : (($test_c < 4) ? ($test_c < 3) ? ($test_c < 2) ? ($test_c < 1) ? 'th' : 'st' : 'nd' : 'rd' : 'th'));
-        return $number . $ext;
-    }
-*/
-
-
-
-    public function createCharacter($code, $encoding = null)
-    {
-        //http://php.net/manual/en/function.mb-chr.php
-        //chr(127)
-        //mb_chr(774);
-    }
 
     
     /*
@@ -1553,26 +1453,15 @@ final class Stringly
     }
 
 
+    public function toJson($options = 0)
+    {
+        return json_encode($this->value, $options);
+    }
 
-    // public function isBase64()
-    // {
-    //     return (string) (base64_encode(base64_decode($this->value, true)) === $this->value);
-    // }
- 
-    // public function getIterator() 
-    // {
-    //     return new \ArrayIterator($this->explode(''));
-    // }  
-
-    // public function toJson($options = 0)
-    // {
-    //     return json_encode($this->value, $options);
-    // }
-
-    // public function toArray()
-    // {
-    //     return $this->split();
-    // }
+    public function toArray()
+    {
+         return $this->split();
+    }
 
 
 }

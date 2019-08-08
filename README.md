@@ -73,6 +73,12 @@ It also has Multi-Byte support and will default to non-mb functions if your syst
         //
         $stringly->rinse()->repeat(3)->toLowerCase()->toTitleCase()->reverse()..... //and so on 
 
+
+```
+You can output the string easily in your code like so...
+
+```php
+        
         //
         // toString()
         //
@@ -114,6 +120,7 @@ $str = Stringly::Create(......);
 
 ```
 s-mcdonald/stringly/
+            │    
             │    
             └ src/
               │

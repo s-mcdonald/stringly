@@ -16,7 +16,8 @@ namespace SamMcDonald\Stringly;
  *
  * @author Sam McDonald <s.mcdonald@outlook.com.au>
  * @link   https://github.com/s-mcdonald/stringly
- *
+ * @version 2.0
+ * 
  * 
  * 
  * Licence 
@@ -157,27 +158,33 @@ final class Stringly
     }
 
 
-    //
-    // FromArray(array $str, string $glue = '', string $encoding = null)
-    // future improvementr, add option to trim each str in the array before adding to stringly object
-    //
-    public static function FromArray(array $strings, string $glue = '', $encoding = null) : Stringly
+    /** 
+     * FromArray(array $str, array $options = null, string $encoding = null)
+     * 
+     */
+    public static function FromArray(array $strings, $options = null, $encoding = null) : Stringly
     {
         $builder = [];
+        $glue = '';
 
         foreach($strings as $str)
         {
+            if(array_key_exists('trim', $options))
+                $str = Stringly::Create($str)->trim();
             $builder[] = $str;
         }
 
-        $string = implode($glue, $builder);
+        if(array_key_exists('glue', $options)):
+            $glue = $options['glue'];
+            $string = implode($glue, $builder);
+        else:
+            $string = implode($builder);
+        endif;
 
         return new static($string, $encoding,($encoding==null));
     }
 
 
-
-    
 
     /**
      * Returns an empty string with the same encoding
@@ -338,6 +345,8 @@ final class Stringly
      *
      * @param  string $string
      * @return int The number of occurances of a given string
+     * 
+     * @todo: case_sensitive 
      * 
      * @since 2.0
      * @author Sam McDonald
@@ -1078,7 +1087,7 @@ final class Stringly
             $shuffled = str_shuffle($this->value);
         }
 
-        return static::make($shuffled, $this->encoding);
+        return static::Create($shuffled, $this->encoding);
     }
 
     
@@ -1297,8 +1306,6 @@ final class Stringly
     }
 
 
-
-
     /**
      * Trim whitespaces and other special characters
      * 
@@ -1346,21 +1353,16 @@ final class Stringly
 #endregion
 
 
-    //
 
 
     /**
-     * Does it?
-     * was inh 1.0, changed to statiic
      * 
      * @return boolean [description]
      */
     public static function hasMultiByteSupport()
     {
-        return $this->has_mbstring;
+        return self::has_mbstring;
     }
-
-
 
 
 
@@ -1380,14 +1382,6 @@ final class Stringly
 
 
 
-
-
-
-
-
-
-
-
     /**
      * Decode html entities
      * 
@@ -1397,7 +1391,7 @@ final class Stringly
     public function htmlDecode($flags = ENT_COMPAT)
     {
         $string = html_entity_decode($this->value, $flags, $this->encoding);
-        return static::make($string, $this->encoding);
+        return static::Create($string, $this->encoding);
     }
 
     /**
@@ -1409,7 +1403,7 @@ final class Stringly
     public function htmlEncode($flags = ENT_COMPAT)
     {
         $string = htmlentities($this->value, $flags, $this->encoding);
-        return static::make($string, $this->encoding);
+        return static::Create($string, $this->encoding);
     }
 
     /**
@@ -1421,7 +1415,7 @@ final class Stringly
     public function htmlStripTags(string $allowable_tags = '')
     {
         $string = strip_tags($this->value, $allowable_tags);
-        return static::make($string, $this->encoding);
+        return static::Create($string, $this->encoding);
     }
 
     /**
@@ -1435,102 +1429,6 @@ final class Stringly
         $stringly = static::Create($new_object);
         return $stringly;
     }
-
-
-
-
-
-
-    /**
-     * Convert tabs (\t) to spaces
-     * 
-     * @param  integer $length [description]
-     * @return [type]          [description]
-     */
-    /*
-    public function toSpaces($length = 2)
-    {
-        $spaces = str_repeat(' ', $length);
-        $string = str_replace("\t", $spaces, $this->value);
-        return static::make($string, $this->encoding);
-    }
-    */
-
-
-
-
-
-
-
-
-     /**
-     * Generates a string of random characters.
-     *
-     * @throws  LengthException  If $length is bigger than the available
-     *                           character pool and $no_duplicate_chars is
-     *                           enabled
-     *
-     * @param   integer $length             The length of the string to
-     *                                      generate
-     * @param   boolean $human_friendly     Whether or not to make the
-     *                                      string human friendly by
-     *                                      removing characters that can be
-     *                                      confused with other characters (
-     *                                      O and 0, l and 1, etc)
-     * @param   boolean $include_symbols    Whether or not to include
-     *                                      symbols in the string. Can not
-     *                                      be enabled if $human_friendly is
-     *                                      true
-     * @param   boolean $no_duplicate_chars Whether or not to only use
-     *                                      characters once in the string.
-     * @return  string
-     */
-    /*
-    public static function random_string($length = 16, $human_friendly = true, $include_symbols = false, $no_duplicate_chars = false)
-    {
-        $nice_chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefhjkmnprstuvwxyz23456789';
-        $all_an     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
-        $symbols    = '!@#$%^&*()~_-=+{}[]|:;<>,.?/"\'\\`';
-        $string     = '';
-        // Determine the pool of available characters based on the given parameters
-        if ($human_friendly) {
-            $pool = $nice_chars;
-        } else {
-            $pool = $all_an;
-            if ($include_symbols) {
-                $pool .= $symbols;
-            }
-        }
-        if (!$no_duplicate_chars) {
-            return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
-        }
-        // Don't allow duplicate letters to be disabled if the length is
-        // longer than the available characters
-        if ($no_duplicate_chars && strlen($pool) < $length) {
-            throw new \LengthException('$length exceeds the size of the pool and $no_duplicate_chars is enabled');
-        }
-        // Convert the pool of characters into an array of characters and
-        // shuffle the array
-        $pool       = str_split($pool);
-        $poolLength = count($pool);
-        $rand       = mt_rand(0, $poolLength - 1);
-        // Generate our string
-        for ($i = 0; $i < $length; $i++) {
-            $string .= $pool[$rand];
-            // Remove the character from the array to avoid duplicates
-            array_splice($pool, $rand, 1);
-            // Generate a new number
-            if (($poolLength - 2 - $i) > 0) {
-                $rand = mt_rand(0, $poolLength - 2 - $i);
-            } else {
-                $rand = 0;
-            }
-        }
-        return $string;
-    }
-*/
-
-
 
 
 
@@ -1555,8 +1453,8 @@ final class Stringly
 
 
     /**
-     * Good for a number version of stringly
      * Numberly
+     * 
      * Returns the ordinal version of a number (appends th, st, nd, rd).
      *
      * @param  string $number The number to append an ordinal suffix to
@@ -1570,8 +1468,6 @@ final class Stringly
         return $number . $ext;
     }
 */
-
-
 
 
 
@@ -1636,8 +1532,6 @@ final class Stringly
     }
 
 
-
-
     
     /*
      |
@@ -1651,49 +1545,7 @@ final class Stringly
      */
 
 
-    
-    /**
-     * Is Valid encoding
-     * 
-     * Now by default will set to UTF-8
-     * 
-     * @param [type] $to_encoding [description]
-     * @param bool @translate   Should the class translate the char set based on new encoding ?
-     * 
-     * @return String The encoding set by user or default/system for the given string.
-     */
-    /*
-    public static function IsEncodingValid(String $string, $encoding = 'ASCII') : bool
-    {
-        if(extension_loaded('mbstring')) 
-        {
-            return \mb_check_encoding($string, $encoding );
-        }
 
-        return true;
-    } */   
-
-
-
- 
-
-
-
-
-
-    /*
-     |
-     |
-     |
-     | Still need to work on the functions below
-     |
-     |
-     |
-     |
-     |
-     */
-
-    
 
     public static function Serialize(\SamMcDonald\Stringly $stringly)
     {

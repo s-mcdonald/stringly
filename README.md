@@ -13,9 +13,9 @@ It also has Multi-Byte support and will default to non-mb functions if your syst
         $stringly = new Stringly("This is a string");
 
         //
-        // If you want to define the encoding use ::make()
+        // If you want to define the encoding use ::Create()
         //
-        $stringly = Stringly::make("This is a string",'UTF-8');
+        $stringly = Stringly::Create("This is a string",'UTF-8');
 
 
         //
@@ -104,7 +104,7 @@ use SamMcDonald\Stringly\Stringly;
 
 ...
 
-$str = Stringly::make(......);
+$str = Stringly::Create(......);
 
 ```
 

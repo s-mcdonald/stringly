@@ -1,0 +1,23 @@
+{
+    "name": "s-mcdonald/stringly",
+    "description": "String wrapper for PHP with multi-byte support",
+    "keywords": ["Sam", "McDonald", "string", "multi-byte"],    
+    "license": "MIT",
+    "homepage": "https://github.com/s-mcdonald/stringly",        
+    "authors": [
+        {
+            "name": "Sam McDonald",
+            "email": "s.mcdonald@outlook.com.au"
+        }
+    ],
+    "version": "1.0.0",    
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SamMcDonald\\Stringly\\": "src/"
+        }
+    }
+}

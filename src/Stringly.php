@@ -58,30 +58,7 @@ namespace SamMcDonald\Stringly;
 final class Stringly 
 {
 
-
-#region Requires Review
-
-    /**
-     * Detect encoding when not provided.
-     * 
-     * Refer to http://php.net/manual/en/mbstring.supported-encodings.php for full list of encoding types.
-     * 
-     * - Added strict mode for detection
-     * http://php.net/manual/en/function.mb-detect-encoding.php#102510
-     * 
-     */
-    private function detectEncoding($use_strict = true)
-    {
-        if($this->has_mbstring) 
-        {
-            $this->encoding = \mb_detect_encoding($this->value,  \mb_detect_order(), $use_strict);
-        }
-    }
-
-
-
-#endregion
-
+    
 
 #region class variables
 
@@ -108,7 +85,12 @@ final class Stringly
     private $encoding;
 
 
-
+    
+    /**
+     * _enableMBSupport
+     *
+     * @var mixed
+     */
     private $_enableMBSupport;
 
 
@@ -129,7 +111,7 @@ final class Stringly
      * @constructor 
      * 
      */
-    protected function __construct($string = "", $encoding = null, $auto_detect_encoding = true) 
+    protected function __construct(string $string = "", $encoding = null, $auto_detect_encoding = true) 
     {  
         $this->_disabledMBSupport = false;
 
@@ -147,30 +129,72 @@ final class Stringly
     /** 
      * Create(string $str, string $encoding = null)
      * 
-     * @param String $string    - String or Styringly object required to create a new Stringly
+     * @param mixed $string     - String or Styringly object required to create a new Stringly
      * @param String $encoding  - The prefferred encoding for the new Stringly Object.
      *                          - When null is passed the object will auto-detect 
      *                          - the encoding.,
      */
-    public static function Create(string $string, string $encoding = null) : Stringly
+    public static function Create($string, string $encoding = null) : Stringly
     {
         return new static($string, $encoding,($encoding==null));
     }
 
 
-    /** 
-     * FromArray(array $str, array $options = null, string $encoding = null)
+    /**
+     * detectEncoding
      * 
+     * This will Detect encoding when not provided by the user.
+     * @see Refer to http://php.net/manual/en/mbstring.supported-encodings.php for full list of encoding types.
+     * @see http://php.net/manual/en/function.mb-detect-encoding.php#102510
+     *
+     * @param  mixed $use_strict
+     * @return void
      */
-    public static function FromArray(array $strings, $options = null, $encoding = null) : Stringly
+    private function detectEncoding($use_strict = true)
+    {
+        if($this->has_mbstring) 
+        {
+            $this->encoding = \mb_detect_encoding($this->value,  \mb_detect_order(), $use_strict);
+        }
+    }
+
+
+    /**
+     * Empty
+     * 
+     * Returns an empty stringly with the same encoding
+     *
+     * @param  string       $encoding The prefferred encoding for the new Stringly Object.
+     *                      When null is passed the object will auto-detect
+     *                      the encoding.
+     * @return Stringly     A new Stringly with no text
+     */
+    public static function Empty(string $encoding=null)
+    {
+        return new static("", $encoding,($encoding==null));
+    }
+
+    /**
+     * FromArray
+     * FromArray(array $str, array $options = null, string $encoding = null)
+     *
+     * @param  mixed $strings
+     * @param  mixed $options   Available options trim|glue
+     * @param  mixed $encoding
+     * @return Stringly
+     */
+    public static function FromArray(array $strings, array $options = null, $encoding = null) : Stringly
     {
         $builder = [];
         $glue = '';
+
+        $options = ($options == null) ? [] : $options;
 
         foreach($strings as $str)
         {
             if(array_key_exists('trim', $options))
                 $str = Stringly::Create($str)->trim();
+
             $builder[] = $str;
         }
 
@@ -185,27 +209,10 @@ final class Stringly
     }
 
 
-
-    /**
-     * Returns an empty string with the same encoding
-     * 
-     * @param String $encoding  - The prefferred encoding for the new Stringly Object.
-     *                          - When null is passed the object will auto-detect 
-     *                          - the encoding.,
-     * 
-     * 
-     * @return  A new Stringly with no text
-     */
-    public static function Empty($encoding=null)
-    {
-        return new static("", $encoding,($encoding==null));
-    }
-
-
 #endregion
 
 
-#region Methods in Order
+#region Methods
 
     /**
      * append($string) : Stringly

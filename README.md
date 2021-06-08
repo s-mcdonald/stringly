@@ -1,55 +1,97 @@
 # PHP Stringly
 [![Source](https://img.shields.io/badge/source-S_McDonald-blue.svg)](https://github.com/s-mcdonald/stringly)
 
-Stringly is a String wrapper for PHP which allows for fluent usage and chainable command methods.
+`Stringly` is a String wrapper for PHP which allows for fluent usage and chainable command methods.
 It also has Multi-Byte support and will default to non-mb functions if your system does not have mb enabled.
-
 
 ## Basic Usage
 ```php
-        //
-        // Create a new String like so
-        //
-        $stringly = new Stringly("This is a string");
 
         //
-        // If you want to define the encoding use ::Create()
+        // Create a new Stringly
+        //
+        $stringly = Stringly::Create("World");
+
+        //
+        // Prepend the string
+        //
+        $stringly->prepend("Hello");
+
+
+```
+
+## Usage
+```php
+
+
+
+        //
+        // Create a new Stringly and define the encoding 
         //
         $stringly = Stringly::Create("This is a string",'UTF-8');
 
 
         //
+        // Create a new Stringly and auto DETECT the encoding 
+        //
+        $stringly = Stringly::Create("プログラミングはクールです", "JIS", true);
+
+
+        //
+        // Create an Empty Stringly
+        //
+        $stringly = Stringly::Empty();
+
+
+
+        //
+        // Create From an array of strings
+        //
+        $stringly = Stringly::FromArray([' apple ','  pear ', 'strawberry']);
+
+
+
+
+
+        //
         // Prepend the string
         //
-        $stringly->prepend("this goes first");
+        $stringly->prepend("text to add before the existing string");
 
 
         //
         // Append the string
         //
-        $stringly->append("this goes last");
+        $stringly->append("text to add after the existing string");
 
 
         //
-        // do other cool stuff
+        // Convert to UpperCase
         //
         $stringly->toUpperCase();
 
 
         //
-        // even cooler stuff
+        // Convert to LowerCase
+        //
+        $stringly->toLowerCase();
+
+
+        //
+        // Reverse the character string
         //
         $stringly->reverse();
 
 
         //
-        // Built-in fantastic stuff
+        // Is the text Numeric
         //
         $stringly->isNumeric() : bool;
 
 
         //
-        // Built-in Multi-Byte support
+        // Length of String
+        // Support built in for Multi-Byte Strings
         // 
         // 昨夜のコンサートは最高でし
         //
@@ -57,7 +99,7 @@ It also has Multi-Byte support and will default to non-mb functions if your syst
 
 
         //
-        // Wow how amzing is this
+        // Last index of String
         //
         $stringly->lastIndexOf('the fox');
 
@@ -69,13 +111,20 @@ It also has Multi-Byte support and will default to non-mb functions if your syst
 
 
         //
-        // and of course chaining
+        // and of course chaining 
         //
-        $stringly->rinse()->repeat(3)->toLowerCase()->toTitleCase()->reverse()..... //and so on 
+        $stringly->rinse()->repeat(3)->toLowerCase()->toTitleCase()->reverse()..... 
+
+
+        //
+        // Get the encoding of the string
+        //
+        $stringly->getEncoding();
 
 
 ```
-You can output the string easily in your code like so...
+
+Displaying/Output the Stringly object directly
 
 ```php
         
@@ -110,7 +159,7 @@ use SamMcDonald\Stringly\Stringly;
 
 ...
 
-$str = Stringly::Create(......);
+$stringly = Stringly::Create("This is the string",'UTF-8');
 
 ```
 
